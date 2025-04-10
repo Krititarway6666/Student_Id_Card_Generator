@@ -17,21 +17,17 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 interface NavbarProps {
   onSelectCard: (card: StudentData) => void;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
-export default function Navbar({ onSelectCard }: NavbarProps) {
+export default function Navbar({ onSelectCard, isOpen, setIsOpen }: NavbarProps) {
   const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = useState(!isMobile);
   const { toast } = useToast();
   
   const { data: savedCards = [], refetch } = useQuery<CardData[]>({
     queryKey: ['/api/cards'],
   });
-
-  // Update isOpen state based on screen size
-  useEffect(() => {
-    setIsOpen(!isMobile);
-  }, [isMobile]);
 
   const handleDeleteCard = async (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -81,12 +77,9 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
     }
   };
 
-  // Set a fixed width for the navbar that depends on screen size
-  const sidebarWidth = "w-full"; // Full width to fit container
-
   return (
     <>
-      {/* Toggle Button - Only visible on smaller screens when navbar is closed */}
+      {/* Toggle Button - Only visible on smaller screens */}
       <AnimatePresence>
         {(!isOpen && isMobile) && (
           <motion.button
@@ -105,11 +98,11 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={isMobile ? { x: '-100%' } : { x: 0, opacity: 0 }}
-            animate={isMobile ? { x: 0 } : { x: 0, opacity: 1 }}
-            exit={isMobile ? { x: '-100%' } : { x: 0, opacity: 0 }}
+            initial={isMobile ? { x: '-100%' } : { opacity: 0 }}
+            animate={isMobile ? { x: 0 } : { opacity: 1 }}
+            exit={isMobile ? { x: '-100%' } : { opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className={`${isMobile ? 'fixed' : 'h-screen sticky top-0'} z-50 ${sidebarWidth} bg-white shadow-xl border-r border-gray-200 flex flex-col`}
+            className="fixed top-0 left-0 h-screen z-50 w-72 bg-white shadow-xl border-r border-gray-200 flex flex-col"
           >
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -166,7 +159,7 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
               )}
             </div>
             
-            {/* Close button at the bottom - shown on all devices */}
+            {/* Close button at the bottom */}
             <div className="p-3 border-t border-gray-200 bg-gray-50">
               <Button 
                 variant="outline" 
