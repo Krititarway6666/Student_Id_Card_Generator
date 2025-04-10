@@ -81,12 +81,12 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
     }
   };
 
-  // Calculate sidebar width based on screen size
-  const sidebarWidth = isMobile ? "w-72" : "w-72 md:w-80 lg:w-96";
+  // Set a fixed width for the navbar that depends on screen size
+  const sidebarWidth = "w-full"; // Full width to fit container
 
   return (
     <>
-      {/* Toggle Button - Only visible on smaller screens */}
+      {/* Toggle Button - Only visible on smaller screens when navbar is closed */}
       <AnimatePresence>
         {(!isOpen && isMobile) && (
           <motion.button
@@ -109,18 +109,22 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
             animate={isMobile ? { x: 0 } : { x: 0, opacity: 1 }}
             exit={isMobile ? { x: '-100%' } : { x: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className={`${isMobile ? 'fixed' : 'sticky top-0'} h-screen z-50 ${sidebarWidth} bg-white shadow-xl border-r border-gray-200 flex flex-col`}
+            className={`${isMobile ? 'fixed' : 'h-screen sticky top-0'} z-50 ${sidebarWidth} bg-white shadow-xl border-r border-gray-200 flex flex-col`}
           >
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <IdCardIcon className="h-5 w-5 text-white" />
                 <h2 className="text-lg font-semibold text-white">Saved ID Cards</h2>
               </div>
-              {isMobile && (
-                <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="text-white hover:bg-blue-700/20">
-                  <X className="h-5 w-5" />
-                </Button>
-              )}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setIsOpen(false)} 
+                className="text-white hover:bg-blue-700/20"
+                aria-label="Close sidebar"
+              >
+                <X className="h-5 w-5" />
+              </Button>
             </div>
             
             <div className="flex-1 overflow-y-auto p-3 space-y-4 bg-gradient-to-b from-blue-50 to-indigo-50">
@@ -128,7 +132,7 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
                 <div className="text-center py-10 text-gray-500">
                   <IdCardIcon className="h-10 w-10 mx-auto mb-3 text-gray-400" />
                   <p>No saved ID cards yet</p>
-                  <p className="text-sm mt-2">Generated cards will appear here</p>
+                  <p className="text-sm mt-2">Generate and save cards to see them here</p>
                 </div>
               ) : (
                 savedCards.map((card: CardData) => (
@@ -162,19 +166,17 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
               )}
             </div>
             
-            {/* Close button at the bottom - only visible on mobile */}
-            {isMobile && (
-              <div className="p-3 border-t border-gray-200 bg-gray-50">
-                <Button 
-                  variant="outline" 
-                  className="w-full flex items-center justify-center"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <ChevronLeft className="h-4 w-4 mr-2" />
-                  Close Sidebar
-                </Button>
-              </div>
-            )}
+            {/* Close button at the bottom - shown on all devices */}
+            <div className="p-3 border-t border-gray-200 bg-gray-50">
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center"
+                onClick={() => setIsOpen(false)}
+              >
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Close Sidebar
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
