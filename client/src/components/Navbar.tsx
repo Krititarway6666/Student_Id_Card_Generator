@@ -6,26 +6,32 @@ import { CardData, StudentData } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeft, 
-  ChevronRight, 
   Trash2, 
   IdCard as IdCardIcon,
-  History,
+  Menu,
   X
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface NavbarProps {
   onSelectCard: (card: StudentData) => void;
 }
 
 export default function Navbar({ onSelectCard }: NavbarProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useState(!isMobile);
   const { toast } = useToast();
   
   const { data: savedCards = [], refetch } = useQuery<CardData[]>({
     queryKey: ['/api/cards'],
   });
+
+  // Update isOpen state based on screen size
+  useEffect(() => {
+    setIsOpen(!isMobile);
+  }, [isMobile]);
 
   const handleDeleteCard = async (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -70,16 +76,19 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
     });
     
     // Close sidebar on mobile after selecting
-    if (window.innerWidth < 1024) {
+    if (isMobile) {
       setIsOpen(false);
     }
   };
+
+  // Calculate sidebar width based on screen size
+  const sidebarWidth = isMobile ? "w-72" : "w-72 md:w-80 lg:w-96";
 
   return (
     <>
       {/* Toggle Button - Only visible on smaller screens */}
       <AnimatePresence>
-        {!isOpen && (
+        {(!isOpen && isMobile) && (
           <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -87,7 +96,7 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
             className="fixed top-20 left-0 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 p-3 rounded-r-lg text-white shadow-lg"
             onClick={() => setIsOpen(true)}
           >
-            <History className="h-5 w-5" />
+            <Menu className="h-5 w-5" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -96,20 +105,22 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ x: '-100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
+            initial={isMobile ? { x: '-100%' } : { x: 0, opacity: 0 }}
+            animate={isMobile ? { x: 0 } : { x: 0, opacity: 1 }}
+            exit={isMobile ? { x: '-100%' } : { x: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-0 left-0 h-screen z-50 w-72 bg-white shadow-xl border-r border-gray-200 flex flex-col"
+            className={`${isMobile ? 'fixed' : 'sticky top-0'} h-screen z-50 ${sidebarWidth} bg-white shadow-xl border-r border-gray-200 flex flex-col`}
           >
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <IdCardIcon className="h-5 w-5 text-white" />
                 <h2 className="text-lg font-semibold text-white">Saved ID Cards</h2>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="text-white hover:bg-blue-700/20">
-                <X className="h-5 w-5" />
-              </Button>
+              {isMobile && (
+                <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="text-white hover:bg-blue-700/20">
+                  <X className="h-5 w-5" />
+                </Button>
+              )}
             </div>
             
             <div className="flex-1 overflow-y-auto p-3 space-y-4 bg-gradient-to-b from-blue-50 to-indigo-50">
@@ -151,29 +162,31 @@ export default function Navbar({ onSelectCard }: NavbarProps) {
               )}
             </div>
             
-            {/* Close button at the bottom */}
-            <div className="p-3 border-t border-gray-200 bg-gray-50">
-              <Button 
-                variant="outline" 
-                className="w-full flex items-center justify-center"
-                onClick={() => setIsOpen(false)}
-              >
-                <ChevronLeft className="h-4 w-4 mr-2" />
-                Close Sidebar
-              </Button>
-            </div>
+            {/* Close button at the bottom - only visible on mobile */}
+            {isMobile && (
+              <div className="p-3 border-t border-gray-200 bg-gray-50">
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-center"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-2" />
+                  Close Sidebar
+                </Button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
       
       {/* Backdrop - only on mobile */}
       <AnimatePresence>
-        {isOpen && (
+        {(isOpen && isMobile) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 bg-black/20 z-40"
+            className="fixed inset-0 bg-black/20 z-40"
             onClick={() => setIsOpen(false)}
           />
         )}
