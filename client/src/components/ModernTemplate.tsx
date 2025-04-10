@@ -21,15 +21,15 @@ export default function ModernTemplate({ studentData, forwardedRef }: ModernTemp
         
         <div className="relative z-10 h-full flex flex-col">
           {/* Header */}
-          <div className="p-5 text-center">
-            <div className="text-lg font-medium uppercase tracking-wide">Student ID</div>
-            <div className="text-sm mt-1 opacity-75">Academic Year 2023-24</div>
+          <div className="p-3 text-center">
+            <div className="text-md font-medium uppercase tracking-wide">Student ID</div>
+            <div className="text-xs mt-1 opacity-75">Academic Year 2023-24</div>
           </div>
           
           {/* Content */}
           <div className="flex-grow flex flex-col items-center px-4 pt-2">
             {/* Photo Area */}
-            <div className="h-36 w-28 bg-white rounded-lg overflow-hidden border-2 border-white shadow-md mb-4">
+            <div className="h-32 w-24 bg-white rounded-lg overflow-hidden border-2 border-white shadow-md mb-2">
               <img 
                 src={studentData.photo || "https://placehold.co/112x144/f3f4f6/a3a3a3?text=Photo"} 
                 alt="Student Photo" 
@@ -38,12 +38,12 @@ export default function ModernTemplate({ studentData, forwardedRef }: ModernTemp
             </div>
             
             {/* Student Info */}
-            <h3 className="text-xl font-bold mb-1">{studentData.fullName}</h3>
-            <p className="text-sm opacity-75 mb-4">{`${studentData.classGrade} - ${studentData.division}`}</p>
+            <h3 className="text-lg font-bold mb-1">{studentData.fullName}</h3>
+            <p className="text-xs opacity-75 mb-2">{`${studentData.classGrade} - ${studentData.division}`}</p>
             
             {/* Student Details */}
-            <div className="bg-indigo-700 bg-opacity-30 w-full rounded-lg p-3 text-sm mb-4">
-              <div className="grid grid-cols-2 gap-2">
+            <div className="bg-indigo-700 bg-opacity-30 w-full rounded-lg p-2 text-xs mb-2">
+              <div className="grid grid-cols-2 gap-1">
                 <div className="flex flex-col">
                   <span className="opacity-75 text-xs">Roll Number</span>
                   <span className="font-medium">{studentData.rollNumber}</span>
@@ -58,37 +58,34 @@ export default function ModernTemplate({ studentData, forwardedRef }: ModernTemp
                 </div>
                 <div className="flex flex-col">
                   <span className="opacity-75 text-xs">Allergies</span>
-                  <span className="font-medium">{studentData.allergies?.length ? studentData.allergies.join(', ') : 'None'}</span>
+                  <span className="font-medium text-xs">{studentData.allergies?.length ? studentData.allergies.join(', ') : 'None'}</span>
                 </div>
               </div>
             </div>
             
             {/* QR Code */}
-            <div className="flex justify-center">
-              <div className="bg-white rounded-md p-2 shadow-sm">
+            <div className="flex justify-center mb-2">
+              <div className="bg-white rounded-md p-1 shadow-sm">
                 <QRCode 
                   value={JSON.stringify({
                     fullName: studentData.fullName,
                     rollNumber: studentData.rollNumber,
                     classGrade: studentData.classGrade,
-                    division: studentData.division,
-                    allergies: studentData.allergies,
-                    rackNumber: studentData.rackNumber,
-                    busRoute: studentData.busRoute
+                    division: studentData.division
                   })}
-                  size={76}
+                  size={60}
                   qrStyle="squares"
-                  eyeRadius={4}
-                  quietZone={4}
+                  eyeRadius={3}
+                  quietZone={2}
                 />
               </div>
             </div>
           </div>
           
           {/* Footer */}
-          <div className="p-3 text-center text-xs opacity-75">
-            <div>School Name - Address</div>
-            <div>Phone: 123-456-7890 | www.schoolwebsite.edu</div>
+          <div className="p-2 text-center opacity-75">
+            <div className="text-[10px]">School Name - Address</div>
+            <div className="text-[9px]">Phone: 123-456-7890 | www.schoolwebsite.edu</div>
           </div>
         </div>
       </div>
