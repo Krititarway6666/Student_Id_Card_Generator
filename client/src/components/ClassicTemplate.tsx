@@ -60,7 +60,15 @@ export default function ClassicTemplate({ studentData, forwardedRef }: ClassicTe
       {/* QR Code */}
       <div className="p-4 flex justify-center">
         <QRCode 
-          value={JSON.stringify(studentData)}
+          value={JSON.stringify({
+            fullName: studentData.fullName,
+            rollNumber: studentData.rollNumber,
+            classGrade: studentData.classGrade,
+            division: studentData.division,
+            allergies: studentData.allergies,
+            rackNumber: studentData.rackNumber,
+            busRoute: studentData.busRoute
+          })}
           size={96}
           qrStyle="squares"
           eyeRadius={5}
