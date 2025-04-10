@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import StudentForm from '@/components/StudentForm';
 import IDCardPreview from '@/components/IDCardPreview';
-import SavedCards from '@/components/SavedCards';
+import Navbar from '@/components/Navbar';
 import { StudentData } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { PlusIcon, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
+import { motion } from 'framer-motion';
 
 export default function Generator() {
   const { toast } = useToast();
@@ -40,7 +41,16 @@ export default function Generator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 py-8">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-indigo-50 to-purple-50 py-8 relative overflow-hidden">
+      {/* Background gradient shapes */}
+      <div className="absolute inset-0 overflow-hidden -z-10">
+        <div className="absolute top-[20%] right-[30%] w-96 h-96 rounded-full bg-blue-200/20 blur-3xl"></div>
+        <div className="absolute bottom-[10%] left-[20%] w-96 h-96 rounded-full bg-indigo-200/20 blur-3xl"></div>
+      </div>
+      
+      {/* Navbar with saved cards */}
+      <Navbar onSelectCard={setStudentData} />
+      
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <Link href="/">
@@ -51,36 +61,52 @@ export default function Generator() {
           </Link>
         </div>
         
-        <header className="mb-8 text-center">
+        <motion.header 
+          className="mb-8 text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Smart Student ID Card Generator
           </h1>
           <p className="text-gray-600 mt-2">Create professional student ID cards with custom templates</p>
-        </header>
+        </motion.header>
 
         <div className="lg:grid lg:grid-cols-5 gap-8">
           {/* Left column - Form */}
-          <div className="lg:col-span-3 mb-8 lg:mb-0">
-            <StudentForm onSubmit={handleFormSubmit} existingData={studentData} />
-            <SavedCards onSelectCard={setStudentData} />
-          </div>
+          <motion.div 
+            className="lg:col-span-3 mb-8 lg:mb-0"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-100">
+              <StudentForm onSubmit={handleFormSubmit} existingData={studentData} />
+            </div>
+          </motion.div>
 
           {/* Right column - Preview */}
-          <div className="lg:col-span-2 flex flex-col">
+          <motion.div 
+            className="lg:col-span-2 flex flex-col"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
             {showPreview ? (
               <IDCardPreview 
                 studentData={studentData} 
                 onClose={handlePreviewClose} 
               />
             ) : studentData && (
-              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+              <div className="bg-white rounded-lg shadow-md p-8 text-center border border-gray-100">
                 <p className="text-gray-500 mb-4">ID card preview is hidden</p>
-                <Button onClick={handleShowPreview} className="bg-blue-600 hover:bg-blue-700">
+                <Button onClick={handleShowPreview} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white">
                   <PlusIcon className="h-4 w-4 mr-2" /> Show Preview
                 </Button>
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
