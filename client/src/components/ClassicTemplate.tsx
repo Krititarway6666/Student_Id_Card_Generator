@@ -59,21 +59,23 @@ export default function ClassicTemplate({ studentData, forwardedRef }: ClassicTe
       
       {/* QR Code */}
       <div className="p-4 flex justify-center">
-        <QRCode 
-          value={JSON.stringify({
-            fullName: studentData.fullName,
-            rollNumber: studentData.rollNumber,
-            classGrade: studentData.classGrade,
-            division: studentData.division,
-            allergies: studentData.allergies,
-            rackNumber: studentData.rackNumber,
-            busRoute: studentData.busRoute
-          })}
-          size={96}
-          qrStyle="squares"
-          eyeRadius={5}
-          quietZone={10}
-        />
+        <div className="flex justify-center items-center bg-white p-1 rounded-md border border-gray-200">
+          <QRCode 
+            value={JSON.stringify({
+              fullName: studentData.fullName,
+              rollNumber: studentData.rollNumber,
+              classGrade: studentData.classGrade,
+              division: studentData.division,
+              allergies: studentData.allergies,
+              rackNumber: studentData.rackNumber,
+              busRoute: studentData.busRoute
+            })}
+            size={80}
+            qrStyle="squares"
+            eyeRadius={4}
+            quietZone={5}
+          />
+        </div>
       </div>
     </div>
   );

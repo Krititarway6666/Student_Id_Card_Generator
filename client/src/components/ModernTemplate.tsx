@@ -65,7 +65,7 @@ export default function ModernTemplate({ studentData, forwardedRef }: ModernTemp
             
             {/* QR Code */}
             <div className="flex justify-center">
-              <div className="bg-white rounded-md p-2">
+              <div className="bg-white rounded-md p-2 shadow-sm">
                 <QRCode 
                   value={JSON.stringify({
                     fullName: studentData.fullName,
@@ -76,10 +76,10 @@ export default function ModernTemplate({ studentData, forwardedRef }: ModernTemp
                     rackNumber: studentData.rackNumber,
                     busRoute: studentData.busRoute
                   })}
-                  size={96}
+                  size={76}
                   qrStyle="squares"
-                  eyeRadius={5}
-                  quietZone={5}
+                  eyeRadius={4}
+                  quietZone={4}
                 />
               </div>
             </div>

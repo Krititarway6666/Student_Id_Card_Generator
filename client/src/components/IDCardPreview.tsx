@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StudentData } from '@/types';
@@ -6,16 +6,23 @@ import ClassicTemplate from './ClassicTemplate';
 import ModernTemplate from './ModernTemplate';
 import { toPng } from 'html-to-image';
 import { useToast } from '@/hooks/use-toast';
-import { DownloadIcon, IdCardIcon, CheckIcon } from 'lucide-react';
+import { DownloadIcon, IdCardIcon, CheckIcon, XIcon } from 'lucide-react';
 
 interface IDCardPreviewProps {
   studentData: StudentData | null;
+  onClose?: () => void;
 }
 
-export default function IDCardPreview({ studentData }: IDCardPreviewProps) {
+export default function IDCardPreview({ studentData, onClose }: IDCardPreviewProps) {
   const { toast } = useToast();
+  const [isVisible, setIsVisible] = useState(true);
   const classicTemplateRef = useRef<HTMLDivElement>(null);
   const modernTemplateRef = useRef<HTMLDivElement>(null);
+  
+  const handleClose = () => {
+    setIsVisible(false);
+    if (onClose) onClose();
+  };
   
   const handleDownloadCard = async () => {
     if (!studentData) return;
@@ -39,6 +46,9 @@ export default function IDCardPreview({ studentData }: IDCardPreviewProps) {
         title: "Download Complete",
         description: "Your ID card has been downloaded successfully.",
       });
+      
+      // Auto-hide preview after download
+      handleClose();
     } catch (error) {
       console.error('Error generating image:', error);
       toast({
@@ -84,8 +94,20 @@ export default function IDCardPreview({ studentData }: IDCardPreviewProps) {
     );
   }
   
+  if (!isVisible) {
+    return null;
+  }
+  
   return (
-    <Card className="bg-white rounded-lg shadow-md">
+    <Card className="bg-white rounded-lg shadow-md relative">
+      <button 
+        onClick={handleClose}
+        className="absolute right-2 top-2 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+        aria-label="Close preview"
+      >
+        <XIcon className="h-4 w-4 text-gray-500" />
+      </button>
+      
       <CardContent className="p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-800">ID Card Preview</h2>

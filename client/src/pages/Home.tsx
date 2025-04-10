@@ -4,18 +4,38 @@ import IDCardPreview from '@/components/IDCardPreview';
 import SavedCards from '@/components/SavedCards';
 import { StudentData } from '@/types';
 import { useToast } from '@/hooks/use-toast';
+import { PlusIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const { toast } = useToast();
   const [studentData, setStudentData] = useState<StudentData | null>(null);
+  const [showPreview, setShowPreview] = useState(true);
 
   const handleFormSubmit = (formData: StudentData) => {
     setStudentData(formData);
+    setShowPreview(true);
     
     toast({
       title: "ID Card Generated",
       description: "Your student ID card has been generated successfully.",
     });
+  };
+  
+  const handlePreviewClose = () => {
+    setShowPreview(false);
+  };
+  
+  const handleShowPreview = () => {
+    if (studentData) {
+      setShowPreview(true);
+    } else {
+      toast({
+        title: "No ID Card Available",
+        description: "Fill out the form first to generate an ID card.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -34,7 +54,19 @@ export default function Home() {
 
         {/* Right column - Preview */}
         <div className="lg:col-span-2 flex flex-col">
-          <IDCardPreview studentData={studentData} />
+          {showPreview ? (
+            <IDCardPreview 
+              studentData={studentData} 
+              onClose={handlePreviewClose} 
+            />
+          ) : studentData && (
+            <div className="bg-white rounded-lg shadow-md p-8 text-center">
+              <p className="text-gray-500 mb-4">ID card preview is hidden</p>
+              <Button onClick={handleShowPreview}>
+                <PlusIcon className="h-4 w-4 mr-2" /> Show Preview
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
