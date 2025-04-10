@@ -59,39 +59,9 @@ export default function IDCardPreview({ studentData, onClose }: IDCardPreviewPro
     }
   };
   
-  // If no data, show empty state
+  // If no data, return null (don't show anything)
   if (!studentData) {
-    return (
-      <Card className="bg-white rounded-lg shadow-md">
-        <CardContent className="p-6 flex flex-col items-center justify-center text-center h-96">
-          <div className="text-gray-400 mb-4">
-            <IdCardIcon className="h-12 w-12" />
-          </div>
-          <h3 className="text-xl font-medium text-gray-700 mb-2">No ID Card Generated Yet</h3>
-          <p className="text-gray-500 mb-4">Fill out the form and click "Generate ID Card" to see a preview here.</p>
-          <div className="space-y-3 text-sm text-gray-600 max-w-md">
-            <div className="flex items-start">
-              <div className="flex-shrink-0 h-5 w-5 flex items-center justify-center mr-2">
-                <CheckIcon className="h-4 w-4 text-blue-500" />
-              </div>
-              <p>Fill in all required student information including a photo</p>
-            </div>
-            <div className="flex items-start">
-              <div className="flex-shrink-0 h-5 w-5 flex items-center justify-center mr-2">
-                <CheckIcon className="h-4 w-4 text-blue-500" />
-              </div>
-              <p>Choose between Classic or Modern ID card templates</p>
-            </div>
-            <div className="flex items-start">
-              <div className="flex-shrink-0 h-5 w-5 flex items-center justify-center mr-2">
-                <CheckIcon className="h-4 w-4 text-blue-500" />
-              </div>
-              <p>Download your generated ID card as a PNG image</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return null;
   }
   
   if (!isVisible) {
