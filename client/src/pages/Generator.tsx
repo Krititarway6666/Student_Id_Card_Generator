@@ -65,42 +65,43 @@ export default function Generator() {
         
         {/* Main content area - conditional classes for centering */}
         <div className={`flex-1 transition-all duration-300 ${navbarOpen ? 'md:ml-0' : 'mx-auto'}`}>
-          <div className="max-w-4xl mx-auto px-4 md:px-8 py-8">
-            <div className="flex justify-between items-center mb-8">
+          <div className="w-full mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-8">
+            <div className="flex justify-between items-center mb-6 md:mb-8">
               <Link href="/">
-                <Button variant="ghost" className="flex items-center text-blue-600 hover:text-blue-800">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
+                <Button variant="ghost" className="flex items-center text-blue-600 hover:text-blue-800 text-sm md:text-base">
+                  <ArrowLeft className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" />
                   Back to Home
                 </Button>
               </Link>
               
-              {!isMobile && (
+              {/* Mobile menu toggle button */}
+              {isMobile && !navbarOpen && (
                 <Button 
                   variant="outline"
                   size="sm"
-                  onClick={() => setNavbarOpen(!navbarOpen)}
-                  className="flex items-center"
+                  onClick={() => setNavbarOpen(true)}
+                  className="flex items-center md:hidden"
                 >
                   <MenuIcon className="h-4 w-4 mr-2" />
-                  {navbarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+                  Menu
                 </Button>
               )}
             </div>
             
             <motion.header 
-              className="mb-8 text-center"
+              className="mb-6 md:mb-8 text-center"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Smart Student ID Card Generator
               </h1>
-              <p className="text-gray-600 mt-2 text-sm md:text-base">Create professional student ID cards with custom templates</p>
+              <p className="text-gray-600 mt-1 md:mt-2 text-xs sm:text-sm md:text-base">Create professional student ID cards with custom templates</p>
             </motion.header>
 
             {/* Responsive grid that changes to column on smaller screens */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 md:gap-8">
               {/* Form column - width responsive based on screen size */}
               <motion.div 
                 className="lg:col-span-7 xl:col-span-7 mb-6 lg:mb-0 order-2 lg:order-1 w-full"
@@ -108,7 +109,7 @@ export default function Generator() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg border border-gray-100">
+                <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg shadow-lg border border-gray-100">
                   <StudentForm onSubmit={handleFormSubmit} existingData={studentData} />
                 </div>
               </motion.div>
@@ -126,10 +127,10 @@ export default function Generator() {
                     onClose={handlePreviewClose} 
                   />
                 ) : studentData && (
-                  <div className="bg-white rounded-lg shadow-md p-6 text-center border border-gray-100">
-                    <p className="text-gray-500 mb-4">ID card preview is hidden</p>
-                    <Button onClick={handleShowPreview} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white">
-                      <PlusIcon className="h-4 w-4 mr-2" /> Show Preview
+                  <div className="bg-white rounded-lg shadow-md p-4 md:p-6 text-center border border-gray-100">
+                    <p className="text-gray-500 mb-3 md:mb-4 text-sm md:text-base">ID card preview is hidden</p>
+                    <Button onClick={handleShowPreview} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm md:text-base">
+                      <PlusIcon className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> Show Preview
                     </Button>
                   </div>
                 )}
